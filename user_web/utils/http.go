@@ -66,6 +66,7 @@ func ValidationCustomErrors(ctx *gin.Context, err error, st []CustomErrors) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"msg": "内部错误",
 		})
+		return
 	}
 	// 转map便于匹配 ,字段名+tag名作为key
 	fieldErrMap := fieldErrsTOMap(fieldErrs)
@@ -82,6 +83,7 @@ func ValidationCustomErrors(ctx *gin.Context, err error, st []CustomErrors) {
 	})
 }
 
+// 将 ValidationErrors 转为map Field+Tag 作为key
 func fieldErrsTOMap(fieldErrs []validator.FieldError) map[string]validator.FieldError {
 	m := make(map[string]validator.FieldError, 0)
 	for _, fieldErr := range fieldErrs {
