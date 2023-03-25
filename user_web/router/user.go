@@ -8,6 +8,7 @@ import (
 func InitUserRouter(Router *gin.RouterGroup) {
 	UserGroup := Router.Group("user")
 	{
-		UserGroup.GET("list", api.GetUserList)
+		UserGroup.POST("list", api.GetUserList)
+		UserGroup.POST("login/email", api.EmailLogin)
 	}
 }
