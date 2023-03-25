@@ -1,0 +1,12 @@
+name: "user_srv"
+
+server:
+  host: "127.0.0.1"
+  port: "8098"
+
+logger:
+  level: "info"
+  development: "true"
+  Encoding: "console"
+  EncoderConfig: "pro"
+  OutputPaths: "stderr"

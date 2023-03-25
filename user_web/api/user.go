@@ -15,7 +15,7 @@ import (
 )
 
 func GetUserList(ctx *gin.Context) {
-	zap.L().Debug("[GetUserList] 被调用")
+	zap.L().Info("[GetUserList] 被调用")
 	ip := "127.0.0.1"
 	port := "8088"
 	dial, err := grpc.Dial(fmt.Sprintf("%s:%s", ip, port), grpc.WithTransportCredentials(insecure.NewCredentials()))

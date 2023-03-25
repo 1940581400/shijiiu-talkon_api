@@ -1,20 +1,17 @@
 package main
 
 import (
-	"fmt"
-	"go.uber.org/zap"
 	"talkon_api/user_web/initialize"
 )
 
 func main() {
-	// 1.初始化 Routers
-	eg := initialize.Routers()
-	port := "8098"
-	// 2.初始化全局 Logger
+	// 1.初始化配置，注意 此操作一定要在第一，不然后面初始化读不到配置
+	initialize.InitConfig()
+	// 2.初始化日志，注意 此操作一定要在第二，不然初始化文件当中的 日志 无法打印
 	initialize.InitLogger()
-	// 启动gin服务
-	zap.S().Infof("启动服务器，端口：%s", port)
-	if err := eg.Run(fmt.Sprintf(":%s", port)); err != nil {
-		zap.S().Panic("服务器启动失败：", err.Error())
-	}
+
+	// 下面顺序可随意
+	// 3.初始化服务
+	initialize.InitServer()
+
 }
