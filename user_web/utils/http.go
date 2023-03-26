@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"net/http"
+	"talkon_api/user_web/global"
 )
 
 type CustomErrors struct {
@@ -59,27 +60,35 @@ func GrpcErrToHttpErr(ctx *gin.Context, err error) {
 }
 
 // ValidationCustomErrors 自定义字段校验失败的返回信息
-func ValidationCustomErrors(ctx *gin.Context, err error, st []CustomErrors) {
-	zap.L().Error("字段校验失败", zap.String("msg", err.Error()))
+func ValidationCustomErrors(ctx *gin.Context, err error, st ...[]CustomErrors) {
 	fieldErrs, ok := err.(validator.ValidationErrors)
 	if !ok {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"msg": "内部错误",
 		})
+		zap.L().Error("[ValidationCustomErrors] 转换错误", zap.String("原错误信息", err.Error()))
 		return
 	}
+	zap.L().Error("[字段校验] 原错误信息", zap.String("msg", err.Error()))
 	// 转map便于匹配 ,字段名+tag名作为key
 	fieldErrMap := fieldErrsTOMap(fieldErrs)
-	for _, cuErr := range st {
-		if fieldErrMap[cuErr.FieldName+cuErr.Tag] != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"msg": cuErr.CustomMsg,
-			})
-			return
+	customMsg := ""
+	if len(st) > 0 {
+		for _, cuErr := range st[0] {
+			if fieldErrMap[cuErr.FieldName+cuErr.Tag] != nil {
+				customMsg = customMsg + cuErr.CustomMsg + ";"
+				// 匹配上了就删除，方便后续循环出没有自定义的错误信息返回
+				delete(fieldErrMap, cuErr.FieldName+cuErr.Tag)
+			}
 		}
 	}
+	// 没有设置自定义错误的错误信息拼接
+	for _, fieldError := range fieldErrMap {
+		customMsg = customMsg + fieldError.Translate(global.Trans) + ";"
+	}
+
 	ctx.JSON(http.StatusBadRequest, gin.H{
-		"msg": err.Error(),
+		"msg": customMsg,
 	})
 }
 

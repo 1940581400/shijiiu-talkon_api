@@ -6,8 +6,8 @@ import (
 	"talkon_api/user_web/global"
 )
 
-// InitServer 启动gin服务
-func InitServer() {
+// StartServer 启动gin服务
+func StartServer() {
 	eg := Routers()
 	config := global.ServerConfig.UserWebInfo
 	port := "8098"

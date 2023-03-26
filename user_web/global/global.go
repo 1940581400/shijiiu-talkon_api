@@ -2,6 +2,7 @@ package global
 
 import (
 	"fmt"
+	ut "github.com/go-playground/universal-translator"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -12,6 +13,8 @@ import (
 var (
 	// ServerConfig 全局配置
 	ServerConfig *config.ServerConfig
+	// Trans 全局翻译器
+	Trans ut.Translator
 )
 
 // NewUserSrvClient 创建一个用户服务的grpc客户端
