@@ -63,14 +63,25 @@ func EmailLogin(ctx *gin.Context) {
 	err := ctx.ShouldBind(&form)
 	if err != nil {
 		validCustomErr := []utils.CustomErrors{
-			{FieldName: "Email", Tag: "required", CustomMsg: "请输入邮箱"},
-			{FieldName: "Email", Tag: "email", CustomMsg: "邮箱格式错误"},
-			{FieldName: "Password", Tag: "required", CustomMsg: "请输入密码"},
+			{FieldName: "EmailLogin.Email", Tag: "required", CustomMsg: "请输入邮箱"},
+			{FieldName: "EmailLogin.Email", Tag: "email", CustomMsg: "邮箱格式错误"},
+			{FieldName: "EmailLogin.Password", Tag: "required", CustomMsg: "请输入密码"},
+			{FieldName: "EmailLogin.Captcha", Tag: "required", CustomMsg: "请输入验证码"},
+			{FieldName: "EmailLogin.Captcha.CaptchaId", Tag: "required", CustomMsg: "请输入验证码"},
+			{FieldName: "EmailLogin.Captcha.Answer", Tag: "required", CustomMsg: "请输入验证码"},
+			{FieldName: "EmailLogin.Captcha.Answer", Tag: "min", CustomMsg: "验证码错误"},
+			{FieldName: "EmailLogin.Captcha.Answer", Tag: "max", CustomMsg: "验证码错误"},
 		}
 		utils.ValidationCustomErrors(ctx, err, validCustomErr)
 		return
 	}
-
+	// 验证验证码
+	if !global.CaptchaStore.Verify(form.Captcha.CaptchaId, form.Captcha.Answer, true) {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"msg": "验证码错误",
+		})
+		return
+	}
 	userInfo, err := global.NewUserSrvClient().GetUserByEmail(context.Background(), &proto.EmailReq{Email: form.Email})
 	if err != nil {
 		utils.GrpcErrToHttpErr(ctx, err)

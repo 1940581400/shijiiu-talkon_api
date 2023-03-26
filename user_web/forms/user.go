@@ -4,6 +4,8 @@ package forms
 type EmailLogin struct {
 	Email    string `form:"email" json:"email" binding:"required,email"`
 	Password string `form:"password" json:"password" binding:"required"`
+	// Captcha 验证码信息
+	Captcha CheckCaptcha `json:"captcha" binding:"required"`
 }
 
 // MobileLogin 手机登录表单

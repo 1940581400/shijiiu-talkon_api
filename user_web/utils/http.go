@@ -96,8 +96,8 @@ func ValidationCustomErrors(ctx *gin.Context, err error, st ...[]CustomErrors) {
 func fieldErrsTOMap(fieldErrs []validator.FieldError) map[string]validator.FieldError {
 	m := make(map[string]validator.FieldError, 0)
 	for _, fieldErr := range fieldErrs {
-		if m[fieldErr.Field()+fieldErr.Tag()] == nil {
-			m[fieldErr.Field()+fieldErr.Tag()] = fieldErr
+		if m[fieldErr.Namespace()+fieldErr.Tag()] == nil {
+			m[fieldErr.Namespace()+fieldErr.Tag()] = fieldErr
 		}
 	}
 	return m

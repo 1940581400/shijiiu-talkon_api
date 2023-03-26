@@ -54,9 +54,6 @@ func CreateCustomToken(userUid string, platform string,
 	newToken.Expire = myClaims.ExpiresAt.Unix()
 	newToken.UserUid = userUid
 	newToken.SessionId = myClaims.SessionId
-	if access {
-		// TODO：将SessionId保存到Redis
-	}
 	return newToken, err
 }
 
