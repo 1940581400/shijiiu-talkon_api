@@ -82,8 +82,19 @@ func EmailLogin(ctx *gin.Context) {
 		return
 	}
 	if check.Ok {
+		// TODO: 获取token ，并存入redis
+		token, err := utils.CreateConfigToken(strconv.FormatInt(int64(userInfo.Id), 10))
+		if err != nil {
+			zap.L().Error("[CreateConfigToken] 创建token出错", zap.Error(err))
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"msg": "内部错误",
+			})
+			return
+		}
 		ctx.JSON(http.StatusOK, gin.H{
-			"msg": "登录成功",
+			"msg":     "登录成功",
+			"userId":  userInfo.Id,
+			"tokenSJ": token,
 		})
 		return
 	}

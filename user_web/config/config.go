@@ -1,5 +1,13 @@
 package config
 
+type ServerConfig struct {
+	Name          string        `mapstructure:"name"`
+	UserWebInfo   UserWebConfig `mapstructure:"server"`
+	LoggerInfo    LoggerConfig  `mapstructure:"logger"`
+	UserSrvConfig UserSrvConfig `mapstructure:"user_srv"`
+	JwtInfo       JwtInfo       `mapstructure:"jwt"`
+}
+
 type UserWebConfig struct {
 	Host string `mapstructure:"host"`
 	Port string `mapstructure:"port"`
@@ -20,9 +28,12 @@ type LoggerConfig struct {
 	ErrorOutputPaths string `mapstructure:"errorOutputPaths"`
 }
 
-type ServerConfig struct {
-	Name          string        `mapstructure:"name"`
-	UserWebInfo   UserWebConfig `mapstructure:"server"`
-	LoggerInfo    LoggerConfig  `mapstructure:"logger"`
-	UserSrvConfig UserSrvConfig `mapstructure:"user_srv"`
+// JwtInfo 字段意义参考 jwt.RegisteredClaims
+type JwtInfo struct {
+	Key      string `mapstructure:"key"`
+	Expires  int64  `mapstructure:"expires"`
+	Issuer   string `mapstructure:"issuer"`
+	Subject  string `mapstructure:"subject"`
+	Audience string `mapstructure:"audience"`
+	Platform string `mapstructure:"platform"`
 }

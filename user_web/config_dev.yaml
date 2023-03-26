@@ -14,3 +14,12 @@ logger:
 user_srv:
   host: "127.0.0.1"
   port: "8088"
+
+
+jwt:
+  key: "talkOn_jwt_by_shijiu_token_2023"
+  expires: 168
+  issuer: "shijiu-talkon"
+  subject: "talkon-default"
+  audience: "shijiu-talkOn.com"
+  platform : "talkon-user-web"
